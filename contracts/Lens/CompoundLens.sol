@@ -42,7 +42,7 @@ contract CompoundLens {
         address underlyingAssetAddress;
         uint underlyingDecimals;
 
-        if (compareStrings(cToken.symbol(), "cETH")) {
+        if (compareStrings(cToken.symbol(), "unETH") || compareStrings(cToken.symbol(), "cETH")) {
             underlyingAssetAddress = address(0);
             underlyingDecimals = 18;
         } else {
@@ -94,7 +94,7 @@ contract CompoundLens {
         uint tokenBalance;
         uint tokenAllowance;
 
-        if (compareStrings(cToken.symbol(), "cETH")) {
+        if (compareStrings(cToken.symbol(), "unETH") || compareStrings(cToken.symbol(), "cETH")) {
             tokenBalance = account.balance;
             tokenAllowance = account.balance;
         } else {
@@ -265,6 +265,25 @@ contract CompoundLens {
             balance: comp.balanceOf(account),
             votes: uint256(comp.getCurrentVotes(account)),
             delegate: comp.delegates(account)
+        });
+    }
+
+    struct CompBalance {
+        uint balance;
+        uint allocated;
+    }
+
+    function getCompBalance(Comp comp, ComptrollerLensInterface comptroller, address account) external returns (CompBalance memory) {
+        uint balance = comp.balanceOf(account);
+        comptroller.claimComp(account);
+        uint newBalance = comp.balanceOf(account);
+        uint accrued = comptroller.compAccrued(account);
+        uint total = add(accrued, newBalance, "sum comp total");
+        uint allocated = sub(total, balance, "sub allocated");
+
+        return CompBalance({
+            balance: balance,
+            allocated: allocated
         });
     }
 
