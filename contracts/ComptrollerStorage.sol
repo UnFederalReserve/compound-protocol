@@ -10,6 +10,11 @@ contract UnitrollerAdminStorage {
     address public admin;
 
     /**
+    * @notice Reward token address
+    */
+    address public rewardTokenAddr;
+
+    /**
     * @notice Pending administrator for this contract
     */
     address public pendingAdmin;

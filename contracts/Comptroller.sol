@@ -61,6 +61,9 @@ contract Comptroller is ComptrollerV5Storage, ComptrollerInterface, ComptrollerE
     /// @notice Emitted when borrow cap guardian is changed
     event NewBorrowCapGuardian(address oldBorrowCapGuardian, address newBorrowCapGuardian);
 
+    /// @notice Emitted when reward token address is changed
+    event NewCompAddress(address oldRewardTokenAddr, address newRewardTokenAddr);
+
     /// @notice Emitted when COMP is granted by admin
     event CompGranted(address recipient, uint amount);
 
@@ -1328,6 +1331,30 @@ contract Comptroller is ComptrollerV5Storage, ComptrollerInterface, ComptrollerE
      * @return The address of COMP
      */
     function getCompAddress() public view returns (address) {
-        return 0xc00e94Cb662C3520282E6f5717214004A7f26888;
+        return rewardTokenAddr;
     }
+
+    /**
+     * @notice Sets a new reward token for the comptroller
+     * @dev Admin function to set a new reward token address
+     * @return uint 0=success, otherwise a failure (see ErrorReporter.sol for details)
+     */
+    function _setCompAddress(address newRewardTokenAddr) public returns (uint) {
+        // Check caller is admin
+        if (msg.sender != admin) {
+            return fail(Error.UNAUTHORIZED, FailureInfo.SET_REWARD_TOKEN_OWNER_CHECK);
+        }
+
+        // Track the old reward token address for the comptroller
+        address oldRewardTokenAddr = rewardTokenAddr;
+
+        // Set comptroller's reward token to newRewardTokenAddr
+        rewardTokenAddr = newRewardTokenAddr;
+
+        // Emit NewCompAddress(oldRewardTokenAddr, newRewardTokenAddr)
+        emit NewCompAddress(oldRewardTokenAddr, newRewardTokenAddr);
+
+        return uint(Error.NO_ERROR);
+    }
+
 }
