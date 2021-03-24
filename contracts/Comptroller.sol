@@ -1073,14 +1073,14 @@ contract Comptroller is ComptrollerV5Storage, ComptrollerInterface, ComptrollerE
             Market storage market = markets[address(cToken)];
             require(market.isListed == true, "comp market is not listed");
 
-            if (compSupplyState[address(cToken)].index == 0 && compSupplyState[address(cToken)].block == 0) {
+            if (compSupplyState[address(cToken)].index == 0) {
                 compSupplyState[address(cToken)] = CompMarketState({
                     index: compInitialIndex,
                     block: safe32(getBlockNumber(), "block number exceeds 32 bits")
                 });
             }
 
-            if (compBorrowState[address(cToken)].index == 0 && compBorrowState[address(cToken)].block == 0) {
+            if (compBorrowState[address(cToken)].index == 0) {
                 compBorrowState[address(cToken)] = CompMarketState({
                     index: compInitialIndex,
                     block: safe32(getBlockNumber(), "block number exceeds 32 bits")
