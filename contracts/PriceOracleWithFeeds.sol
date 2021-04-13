@@ -11,6 +11,11 @@ contract PriceOracleWithFeeds is PriceOracle, ExponentialNoError {
     */
     address public admin;
 
+    /**
+     * @notice Pending administrator for this contract
+     */
+    address payable public pendingAdmin;
+
     mapping(address => uint) prices;
 
     struct ChainlinkFeed {
@@ -91,7 +96,7 @@ contract PriceOracleWithFeeds is PriceOracle, ExponentialNoError {
 
     /**
     * @notice Set chainlink price feed for the CToken.
-    * @param asset The address of the CToken
+    * @param cToken The address of the CToken
     * @param feed The address of the chainlink price feed
     * @param multiplierMantissa Multiplier to adjust the price feed decimals to the decimals expected by the comptroller. Usually 1e(18-asset.decimals) * 1e(18-feed.decimals)
     */
@@ -100,6 +105,34 @@ contract PriceOracleWithFeeds is PriceOracle, ExponentialNoError {
         require(msg.sender == admin, "only admin can set price");
 
         setDirectChainlinkFeed(address(CErc20(address(cToken)).underlying()), feed, multiplierMantissa);
+    }
+
+    /**
+      * @notice Begins transfer of admin rights. The newPendingAdmin must call `_acceptAdmin` to finalize the transfer.
+      * @dev Admin function to begin change of admin. The newPendingAdmin must call `_acceptAdmin` to finalize the transfer.
+      * @param newPendingAdmin New pending admin.
+      */
+    function _setPendingAdmin(address payable newPendingAdmin) external {
+        // Check caller = admin
+        require(msg.sender == admin, "unauthorized");
+
+        // Store pendingAdmin with value newPendingAdmin
+        pendingAdmin = newPendingAdmin;
+    }
+
+    /**
+      * @notice Accepts transfer of admin rights. msg.sender must be pendingAdmin
+      * @dev Admin function for pending admin to accept role and update admin
+      */
+    function _acceptAdmin() external {
+        // Check caller is pendingAdmin and pendingAdmin ≠ address(0)
+        require(msg.sender == pendingAdmin && msg.sender != address(0), "unauthorized");
+
+        // Store admin with value pendingAdmin
+        admin = pendingAdmin;
+
+        // Clear the pending value
+        pendingAdmin = address(0);
     }
 
 }
