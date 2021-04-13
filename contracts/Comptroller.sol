@@ -1250,6 +1250,18 @@ contract Comptroller is ComptrollerV5Storage, ComptrollerInterface, ComptrollerE
         }
     }
 
+    // Aliases with more generic names
+    function claimRewards(address holder) public {
+        return claimComp(holder);
+    }
+
+    function claimRewards(address holder, CToken[] memory cTokens) public {
+        return claimComp(holder, cTokens);
+    }
+    function claimRewards(address[] memory holders, CToken[] memory cTokens, bool borrowers, bool suppliers) public {
+        return claimComp(holders, cTokens, borrowers, suppliers);
+    }
+
     /**
      * @notice Transfer COMP to the user
      * @dev Note: If there is not enough COMP, we do not perform the transfer all.
