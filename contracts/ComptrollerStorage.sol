@@ -10,11 +10,6 @@ contract UnitrollerAdminStorage {
     address public admin;
 
     /**
-    * @notice Reward token address
-    */
-    address public rewardTokenAddr;
-
-    /**
     * @notice Pending administrator for this contract
     */
     address public pendingAdmin;
@@ -147,4 +142,12 @@ contract ComptrollerV5Storage is ComptrollerV4Storage {
 
     /// @notice Last block at which a contributor's COMP rewards have been allocated
     mapping(address => uint) public lastContributorBlock;
+
+}
+
+contract ComptrollerV6Storage is ComptrollerV5Storage {
+   /**
+    * @notice Reward token address
+   */
+    address public rewardTokenAddr;
 }
