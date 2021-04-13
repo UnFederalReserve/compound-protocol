@@ -1352,6 +1352,9 @@ contract Comptroller is ComptrollerV6Storage, ComptrollerInterface, ComptrollerE
      * @return uint 0=success, otherwise a failure (see ErrorReporter.sol for details)
      */
     function _setCompAddress(address newRewardTokenAddr) public returns (uint) {
+
+        require(isContract(newRewardTokenAddr), "only contract address is allowed");
+
         // Check caller is admin
         if (msg.sender != admin) {
             return fail(Error.UNAUTHORIZED, FailureInfo.SET_REWARD_TOKEN_OWNER_CHECK);
@@ -1369,4 +1372,9 @@ contract Comptroller is ComptrollerV6Storage, ComptrollerInterface, ComptrollerE
         return uint(Error.NO_ERROR);
     }
 
+    function isContract(address addr) internal view returns (bool) {
+        uint size;
+        assembly { size := extcodesize(addr) }
+        return size > 0;
+    }
 }
