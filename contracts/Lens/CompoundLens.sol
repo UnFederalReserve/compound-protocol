@@ -42,7 +42,7 @@ contract CompoundLens {
         address underlyingAssetAddress;
         uint underlyingDecimals;
 
-        if (compareStrings(cToken.symbol(), "unETH") || compareStrings(cToken.symbol(), "cETH")) {
+        if (compareStrings(cToken.symbol(), "unETH")) {
             underlyingAssetAddress = address(0);
             underlyingDecimals = 18;
         } else {
