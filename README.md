@@ -1,8 +1,8 @@
 Unfederal Reserve
 =================
-Unfederal Reserve is a blockchain agnostic, decentralized peer to peer lending platform based on a fork of [Compound Finance](https://compound.finance).
+unFederalReserve protocol is a blockchain agnostic, decentralized peer to peer lending platform based on a fork of [Compound Finance](https://compound.finance).
 
-Unfederal Reserve bridges liquidity across underserved assets by providing algorithmic money markets to these underserved assets. Users can supply any supported assets and use these supplied assets as collateral to borrow any other supported assets. Unfederal Reserve has launched on Ethereum and Binance Smart Chain.
+unFederalReserve protocol bridges liquidity across underserved assets by providing algorithmic money markets to these underserved assets. Users can supply any supported assets and use these supplied assets as collateral to borrow any other supported assets. unFederalReserve protocol has launched on Ethereum.
 
 Before getting started with this repo, please read the [Compound protocol](https://github.com/compound-finance/compound-protocol) repo
 
