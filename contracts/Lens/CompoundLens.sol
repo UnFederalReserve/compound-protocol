@@ -42,7 +42,7 @@ contract CompoundLens {
         address underlyingAssetAddress;
         uint underlyingDecimals;
 
-        if (compareStrings(cToken.symbol(), "unETH")) {
+        if (cToken.isEther()) {
             underlyingAssetAddress = address(0);
             underlyingDecimals = 18;
         } else {
@@ -94,7 +94,7 @@ contract CompoundLens {
         uint tokenBalance;
         uint tokenAllowance;
 
-        if (compareStrings(cToken.symbol(), "unETH") || compareStrings(cToken.symbol(), "cETH")) {
+        if (cToken.isEther()) {
             tokenBalance = account.balance;
             tokenAllowance = account.balance;
         } else {
@@ -324,10 +324,6 @@ contract CompoundLens {
             });
         }
         return res;
-    }
-
-    function compareStrings(string memory a, string memory b) internal pure returns (bool) {
-        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 
     function add(uint a, uint b, string memory errorMessage) internal pure returns (uint) {

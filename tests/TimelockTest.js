@@ -19,7 +19,7 @@ describe('Timelock', () => {
   let value = zero;
   let signature = 'setDelay(uint256)';
   let data = encodeParameters(['uint256'], [newDelay.toFixed()]);
-  let revertData = encodeParameters(['uint256'], [etherUnsigned(60 * 60).toFixed()]);
+  let revertData = encodeParameters(['uint256'], [etherUnsigned(59 * 60).toFixed()]);
   let eta;
   let queuedTxHash;
 

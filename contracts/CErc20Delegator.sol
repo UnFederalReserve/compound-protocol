@@ -275,6 +275,11 @@ contract CErc20Delegator is CTokenInterface, CErc20Interface, CDelegatorInterfac
         return abi.decode(data, (uint));
     }
 
+    function isEther() external view returns (bool) {
+        bytes memory data = delegateToViewImplementation(abi.encodeWithSignature("isEther()"));
+        return abi.decode(data, (bool));
+    }
+
    /**
      * @notice Accrue interest then return the up-to-date exchange rate
      * @return Calculated exchange rate scaled by 1e18

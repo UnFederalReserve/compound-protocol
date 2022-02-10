@@ -1090,6 +1090,10 @@ contract CToken is CTokenInterface, Exponential, TokenErrorReporter {
         return uint(Error.NO_ERROR);
     }
 
+    function isEther() external view returns (bool) {
+        return false;
+    }
+
 
     /*** Admin Functions ***/
 
