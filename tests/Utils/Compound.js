@@ -36,7 +36,7 @@ async function makeComptroller(opts = {}) {
   }
 
   if (kind == 'unitroller-g2') {
-    const unitroller = opts.unitroller || await deploy('Unitroller');
+    const unitroller = opts.unitroller || await deploy('UnitrollerHarness');
     const comptroller = await deploy('ComptrollerScenarioG2');
     const priceOracle = opts.priceOracle || await makePriceOracle(opts.priceOracleOpts);
     const closeFactor = etherMantissa(dfn(opts.closeFactor, .051));
@@ -55,7 +55,7 @@ async function makeComptroller(opts = {}) {
   }
 
   if (kind == 'unitroller-g3') {
-    const unitroller = opts.unitroller || await deploy('Unitroller');
+    const unitroller = opts.unitroller || await deploy('UnitrollerHarness');
     const comptroller = await deploy('ComptrollerScenarioG3');
     const priceOracle = opts.priceOracle || await makePriceOracle(opts.priceOracleOpts);
     const closeFactor = etherMantissa(dfn(opts.closeFactor, .051));
@@ -77,7 +77,7 @@ async function makeComptroller(opts = {}) {
   }
 
   if (kind == 'unitroller-g6') {
-    const unitroller = opts.unitroller || await deploy('Unitroller');
+    const unitroller = opts.unitroller || await deploy('UnitrollerHarness');
     const comptroller = await deploy('ComptrollerScenarioG6');
     const priceOracle = opts.priceOracle || await makePriceOracle(opts.priceOracleOpts);
     const closeFactor = etherMantissa(dfn(opts.closeFactor, .051));
@@ -98,7 +98,7 @@ async function makeComptroller(opts = {}) {
   }
 
   if (kind == 'unitroller') {
-    const unitroller = opts.unitroller || await deploy('Unitroller');
+    const unitroller = opts.unitroller || await deploy('UnitrollerHarness');
     const comptroller = await deploy('ComptrollerHarness');
     const priceOracle = opts.priceOracle || await makePriceOracle(opts.priceOracleOpts);
     const closeFactor = etherMantissa(dfn(opts.closeFactor, .051));

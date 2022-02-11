@@ -5,7 +5,7 @@ describe('admin / _setPendingAdmin / _acceptAdmin', () => {
   let comptroller;
   beforeEach(async () => {
     [root, ...accounts] = saddle.accounts;
-    comptroller = await deploy('Unitroller');
+    comptroller = await deploy('UnitrollerHarness');
   });
 
   describe('admin()', () => {

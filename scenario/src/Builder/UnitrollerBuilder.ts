@@ -6,7 +6,7 @@ import {Arg, Fetcher, getFetcherValue} from '../Command';
 import {storeAndSaveContract} from '../Networks';
 import {getContract} from '../Contract';
 
-const UnitrollerContract = getContract("Unitroller");
+const UnitrollerContract = getContract("UnitrollerHarness");
 
 export interface UnitrollerData {
   invokation: Invokation<Unitroller>,
