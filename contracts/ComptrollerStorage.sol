@@ -2,8 +2,9 @@ pragma solidity ^0.5.16;
 
 import "./CToken.sol";
 import "./PriceOracle.sol";
+import "./WhitelistInterfaces.sol";
 
-contract UnitrollerAdminStorage {
+contract UnitrollerAdminStorage is WhitelistStorage {
     /**
     * @notice Administrator for this contract
     */
