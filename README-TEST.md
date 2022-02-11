@@ -25,7 +25,7 @@ yarn install
 ```bash
 export SADDLE_SHELL=/bin/sh
 export SADDLE_CONTRACTS="contracts/*.sol contracts/Chainlink/*.sol contracts/Governance/*.sol contracts/Lens/CompoundLens.sol tests/Contracts/*.sol"
-npx saddle te
+npx saddle compile
 ```
 
 
