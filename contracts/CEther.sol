@@ -106,6 +106,10 @@ contract CEther is CToken {
         requireNoError(err, "liquidateBorrow failed");
     }
 
+    function isEther() external view returns (bool) {
+        return true;
+    }
+
     /**
      * @notice Send Ether to CEther to mint
      */

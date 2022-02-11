@@ -34,7 +34,7 @@ contract PriceOracleWithFeeds is PriceOracle, ExponentialNoError {
 
     function getUnderlyingPrice(CToken cToken) public view returns (uint) {
         address asset;
-        if (compareStrings(cToken.symbol(), "unETH")) {
+        if (cToken.isEther()) {
             asset = address(0);
         } else {
             asset = address(CErc20(address(cToken)).underlying());
@@ -74,10 +74,6 @@ contract PriceOracleWithFeeds is PriceOracle, ExponentialNoError {
             return mul_(uint(price), chainlink_feed.multiplierMantissa);
         }
         return prices[asset];
-    }
-
-    function compareStrings(string memory a, string memory b) internal pure returns (bool) {
-        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 
     /**

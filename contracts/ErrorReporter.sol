@@ -43,7 +43,8 @@ contract ComptrollerErrorReporter {
         SUPPORT_MARKET_EXISTS,
         SUPPORT_MARKET_OWNER_CHECK,
         SET_PAUSE_GUARDIAN_OWNER_CHECK,
-        SET_REWARD_TOKEN_OWNER_CHECK
+        SET_REWARD_TOKEN_OWNER_CHECK,
+        SET_WHITELIST_OWNER_CHECK
     }
 
     /**

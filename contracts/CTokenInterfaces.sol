@@ -228,6 +228,7 @@ contract CTokenInterface is CTokenStorage {
     function getCash() external view returns (uint);
     function accrueInterest() public returns (uint);
     function seize(address liquidator, address borrower, uint seizeTokens) external returns (uint);
+    function isEther() external view returns (bool);
 
 
     /*** Admin Functions ***/

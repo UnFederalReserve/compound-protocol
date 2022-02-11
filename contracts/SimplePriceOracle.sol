@@ -8,8 +8,8 @@ contract SimplePriceOracle is PriceOracle {
     event PricePosted(address asset, uint previousPriceMantissa, uint requestedPriceMantissa, uint newPriceMantissa);
 
     function getUnderlyingPrice(CToken cToken) public view returns (uint) {
-        if (compareStrings(cToken.symbol(), "unETH")) {
-            return prices[address(0)];
+        if (cToken.isEther()) {
+            return 1e18;
         } else {
             return prices[address(CErc20(address(cToken)).underlying())];
         }
@@ -29,9 +29,5 @@ contract SimplePriceOracle is PriceOracle {
     // v1 price oracle interface for use as backing of proxy
     function assetPrices(address asset) external view returns (uint) {
         return prices[asset];
-    }
-
-    function compareStrings(string memory a, string memory b) internal pure returns (bool) {
-        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 }

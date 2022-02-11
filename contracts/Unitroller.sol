@@ -2,12 +2,14 @@ pragma solidity ^0.5.16;
 
 import "./ErrorReporter.sol";
 import "./ComptrollerStorage.sol";
+import "./Whitelist.sol";
+
 /**
  * @title ComptrollerCore
  * @dev Storage for the comptroller is at this address, while execution is delegated to the `comptrollerImplementation`.
  * CTokens should reference this contract as their comptroller.
  */
-contract Unitroller is UnitrollerAdminStorage, ComptrollerErrorReporter {
+contract Unitroller is UnitrollerAdminStorage, ComptrollerErrorReporter, Whitelist {
 
     /**
       * @notice Emitted when pendingComptrollerImplementation is changed
@@ -32,6 +34,33 @@ contract Unitroller is UnitrollerAdminStorage, ComptrollerErrorReporter {
     constructor() public {
         // Set admin to caller
         admin = msg.sender;
+    }
+
+
+    /*** Policy Hooks ***/
+
+    function mintAllowed(address cToken, address minter, uint mintAmount) external returns (uint) {
+        require(isMember(minter), "Mint allow only whitelisted");
+        _fallback();
+    }
+
+    function redeemAllowed(address cToken, address redeemer, uint redeemTokens) external returns (uint) {
+        require(isMember(redeemer), "Redeem allow only whitelisted");
+        _fallback();
+    }
+
+    function borrowAllowed(address cToken, address borrower, uint borrowAmount) external returns (uint) {
+       require(isMember(borrower), "Borrow allow only whitelisted");
+       _fallback();
+    }
+
+    function repayBorrowAllowed(address cToken, address payer, address borrower, uint repayAmount) external returns (uint) {
+        require(isMember(payer), "Repay allow only whitelisted");
+        _fallback();
+    }
+
+    function isMember(address account) internal returns (bool) {
+        return members[account] == true;
     }
 
     /*** Admin Functions ***/
@@ -75,6 +104,25 @@ contract Unitroller is UnitrollerAdminStorage, ComptrollerErrorReporter {
         return uint(Error.NO_ERROR);
     }
 
+    function _addMembers(address[] memory _members) public returns (uint) {
+        if (msg.sender != admin) {
+            return fail(Error.UNAUTHORIZED, FailureInfo.SET_WHITELIST_OWNER_CHECK);
+        }
+
+        super._addMembers(_members);
+
+        return uint(Error.NO_ERROR);
+    }
+
+    function _removeMembers(address[] memory _members) public returns (uint) {
+        if (msg.sender != admin) {
+            return fail(Error.UNAUTHORIZED, FailureInfo.SET_WHITELIST_OWNER_CHECK);
+        }
+
+        super._removeMembers(_members);
+
+        return uint(Error.NO_ERROR);
+    }
 
     /**
       * @notice Begins transfer of admin rights. The newPendingAdmin must call `_acceptAdmin` to finalize the transfer.
@@ -133,6 +181,10 @@ contract Unitroller is UnitrollerAdminStorage, ComptrollerErrorReporter {
      * or forwards reverts.
      */
     function () payable external {
+      _fallback();
+    }
+
+    function _fallback() internal {
         // delegate all other functions to current implementation
         (bool success, ) = comptrollerImplementation.delegatecall(msg.data);
 
