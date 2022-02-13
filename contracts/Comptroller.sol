@@ -7,12 +7,19 @@ import "./ComptrollerInterface.sol";
 import "./ComptrollerStorage.sol";
 import "./Unitroller.sol";
 import "./Governance/Comp.sol";
+import "./Whitelist.sol";
 
 /**
  * @title Compound's Comptroller Contract
  * @author Compound
  */
-contract Comptroller is ComptrollerV6Storage, ComptrollerInterface, ComptrollerErrorReporter, ExponentialNoError {
+contract Comptroller is
+    ComptrollerV6Storage,
+    ComptrollerInterface,
+    ComptrollerErrorReporter,
+    ExponentialNoError,
+    Whitelist
+{
     /// @notice Emitted when an admin supports a market
     event MarketListed(CToken cToken);
 
@@ -228,6 +235,8 @@ contract Comptroller is ComptrollerV6Storage, ComptrollerInterface, ComptrollerE
         // Pausing is a very serious situation - we revert to sound the alarms
         require(!mintGuardianPaused[cToken], "mint is paused");
 
+        require(isMember(minter), "Mint allow only whitelisted");
+
         // Shh - currently unused
         minter;
         mintAmount;
@@ -275,6 +284,8 @@ contract Comptroller is ComptrollerV6Storage, ComptrollerInterface, ComptrollerE
         if (allowed != uint(Error.NO_ERROR)) {
             return allowed;
         }
+
+        require(isMember(redeemer), "Redeem allow only whitelisted");
 
         // Keep the flywheel moving
         updateCompSupplyIndex(cToken);
@@ -333,6 +344,8 @@ contract Comptroller is ComptrollerV6Storage, ComptrollerInterface, ComptrollerE
     function borrowAllowed(address cToken, address borrower, uint borrowAmount) external returns (uint) {
         // Pausing is a very serious situation - we revert to sound the alarms
         require(!borrowGuardianPaused[cToken], "borrow is paused");
+
+        require(isMember(borrower), "Borrow allow only whitelisted");
 
         if (!markets[cToken].isListed) {
             return uint(Error.MARKET_NOT_LISTED);
@@ -420,6 +433,8 @@ contract Comptroller is ComptrollerV6Storage, ComptrollerInterface, ComptrollerE
         if (!markets[cToken].isListed) {
             return uint(Error.MARKET_NOT_LISTED);
         }
+
+        require(isMember(payer), "Repay allow only whitelisted");
 
         // Keep the flywheel moving
         Exp memory borrowIndex = Exp({mantissa: CToken(cToken).borrowIndex()});
@@ -802,6 +817,10 @@ contract Comptroller is ComptrollerV6Storage, ComptrollerInterface, ComptrollerE
         return (uint(Error.NO_ERROR), seizeTokens);
     }
 
+    function isMember(address account) internal returns (bool) {
+        return members[account] == true;
+    }
+
     /*** Admin Functions ***/
 
     /**
@@ -1045,6 +1064,26 @@ contract Comptroller is ComptrollerV6Storage, ComptrollerInterface, ComptrollerE
     function _become(Unitroller unitroller) public {
         require(msg.sender == unitroller.admin(), "only unitroller admin can change brains");
         require(unitroller._acceptImplementation() == 0, "change not authorized");
+    }
+
+    function _addMembers(address[] memory _members) public returns (uint) {
+        if (msg.sender != admin) {
+            return fail(Error.UNAUTHORIZED, FailureInfo.SET_WHITELIST_OWNER_CHECK);
+        }
+
+        Whitelist._addMembers(_members);
+
+        return uint(Error.NO_ERROR);
+    }
+
+    function _removeMembers(address[] memory _members) public returns (uint) {
+        if (msg.sender != admin) {
+            return fail(Error.UNAUTHORIZED, FailureInfo.SET_WHITELIST_OWNER_CHECK);
+        }
+
+        Whitelist._removeMembers(_members);
+
+        return uint(Error.NO_ERROR);
     }
 
     /**
