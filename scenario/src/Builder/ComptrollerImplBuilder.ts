@@ -27,7 +27,7 @@ const ComptrollerG6Contract = getContract('ComptrollerG6');
 const ComptrollerScenarioG6Contract = getContract('ComptrollerScenarioG6');
 
 const ComptrollerScenarioContract = getTestContract('ComptrollerScenario');
-const ComptrollerContract = getContract('Comptroller');
+const ComptrollerContract = getContract('ComptrollerFreeWhitelist');
 
 const ComptrollerBorkedContract = getTestContract('ComptrollerBorked');
 

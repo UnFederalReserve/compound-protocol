@@ -4,7 +4,7 @@ import "./CToken.sol";
 import "./PriceOracle.sol";
 import "./WhitelistInterfaces.sol";
 
-contract UnitrollerAdminStorage is WhitelistStorage {
+contract UnitrollerAdminStorage {
     /**
     * @notice Administrator for this contract
     */
@@ -146,7 +146,7 @@ contract ComptrollerV5Storage is ComptrollerV4Storage {
 
 }
 
-contract ComptrollerV6Storage is ComptrollerV5Storage {
+contract ComptrollerV6Storage is ComptrollerV5Storage, WhitelistStorage {
    /**
     * @notice Reward token address
    */

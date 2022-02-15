@@ -12,7 +12,7 @@ describe('ComptrollerV1', function() {
     [root, ...accounts] = saddle.accounts;
     oracle = await makePriceOracle();
     brains = await deploy('ComptrollerG1');
-    unitroller = await deploy('UnitrollerHarness');
+    unitroller = await deploy('Unitroller');
   });
 
   let initializeBrains = async (priceOracle, closeFactor, maxAssets) => {
