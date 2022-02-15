@@ -1,12 +1,13 @@
 pragma solidity ^0.5.16;
 
 import "../../contracts/Comptroller.sol";
+import "./ComptrollerWhitelistFree.sol";
 
-contract ComptrollerScenario is Comptroller {
+contract ComptrollerScenario is Comptroller, ComptrollerWhitelistFree {
     uint public blockNumber;
     address public compAddress;
 
-    constructor() Comptroller() public {}
+    constructor() Comptroller() ComptrollerWhitelistFree() public {}
 
     function fastForward(uint blocks) public returns (uint) {
         blockNumber += blocks;
