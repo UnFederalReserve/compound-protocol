@@ -128,12 +128,22 @@ contract Unitroller is UnitrollerAdminStorage, ComptrollerErrorReporter {
         return uint(Error.NO_ERROR);
     }
 
+    function isContract(address adr) private view returns(bool) {
+        uint32 size;
+        assembly {
+            size := extcodesize(adr)
+        }
+        return size > 0;
+    }
+
     /**
      * @dev Delegates execution to an implementation contract.
      * It returns to the external caller whatever the implementation returns
      * or forwards reverts.
      */
     function () payable external {
+      require(isContract(comptrollerImplementation), "Implementation hasn't code");
+
         // delegate all other functions to current implementation
         (bool success, ) = comptrollerImplementation.delegatecall(msg.data);
 
