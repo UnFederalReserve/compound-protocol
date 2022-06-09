@@ -43,7 +43,8 @@ contract PriceOracleWithFeeds is PriceOracle, ExponentialNoError {
         }
         ChainlinkFeed storage chainlink_feed = chainlink_feeds[asset];
         if (address(chainlink_feed.addr) != address(0)) {
-            (uint80 roundID, int price, uint startedAt, uint timeStamp, uint80 answeredInRound) = chainlink_feed.addr.latestRoundData();
+            (uint80 roundID, int price, uint startedAt, uint updatedAt, uint80 answeredInRound) = chainlink_feed.addr.latestRoundData();
+            require(updatedAt != 0 && answeredInRound == roundID, "price isn't from the current round");
             require(price >= 0, "price can't be negative");
             return mul_(uint(price), chainlink_feed.multiplierMantissa);
         }
@@ -71,7 +72,8 @@ contract PriceOracleWithFeeds is PriceOracle, ExponentialNoError {
     function assetPrices(address asset) external view returns (uint) {
         ChainlinkFeed storage chainlink_feed = chainlink_feeds[asset];
         if (address(chainlink_feed.addr) != address(0)) {
-            (uint80 roundID, int price, uint startedAt, uint timeStamp, uint80 answeredInRound) = chainlink_feed.addr.latestRoundData();
+            (uint80 roundID, int price, uint startedAt, uint updatedAt, uint80 answeredInRound) = chainlink_feed.addr.latestRoundData();
+            require(updatedAt != 0 && answeredInRound == roundID, "price isn't from the current round");
             require(price >= 0, "price can't be negative");
             return mul_(uint(price), chainlink_feed.multiplierMantissa);
         }
