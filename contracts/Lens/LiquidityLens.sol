@@ -159,13 +159,13 @@ contract Lens is ExponentialNoError {
         address(oracle).call(
             abi.encodeWithSelector(oracle.getUnderlyingPrice.selector, addr)
         );
-        if (success && returnData.length > 0) {
+        if (success && returnData.length != 0) {
             return abi.decode(returnData, (uint));
         }
 
         // get underlying asset
         (success, returnData) = addr.call(abi.encodeWithSignature("underlying()"));
-        if (success && returnData.length > 0) {
+        if (success && returnData.length != 0) {
             return getPrice(oracle, abi.decode(returnData, (address)));
         }
         return 0;
