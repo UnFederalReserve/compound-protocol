@@ -27,6 +27,8 @@ contract PriceOracleWithFeeds is PriceOracle, ExponentialNoError {
 
     event PricePosted(address asset, uint previousPriceMantissa, uint requestedPriceMantissa, uint newPriceMantissa);
     event ChainlinkPriceFeedPosted(address asset, address feed);
+    event NewPendingAdmin(address oldPendingAdmin, address newPendingAdmin);
+    event NewAdmin(address oldAdmin, address newAdmin);
 
     constructor() public {
         admin = msg.sender;
@@ -112,8 +114,13 @@ contract PriceOracleWithFeeds is PriceOracle, ExponentialNoError {
         // Check caller = admin
         require(msg.sender == admin, "unauthorized");
 
+        // Save current value, if any, for inclusion in log
+        address oldPendingAdmin = pendingAdmin;
+
         // Store pendingAdmin with value newPendingAdmin
         pendingAdmin = newPendingAdmin;
+
+        emit NewPendingAdmin(oldPendingAdmin, newPendingAdmin);
     }
 
     /**
@@ -124,11 +131,18 @@ contract PriceOracleWithFeeds is PriceOracle, ExponentialNoError {
         // Check caller is pendingAdmin and pendingAdmin ≠ address(0)
         require(msg.sender == pendingAdmin && msg.sender != address(0), "unauthorized");
 
+        // Save current values for inclusion in log
+        address oldAdmin = admin;
+        address oldPendingAdmin = pendingAdmin;
+
         // Store admin with value pendingAdmin
         admin = pendingAdmin;
 
         // Clear the pending value
         pendingAdmin = address(0);
+
+        emit NewAdmin(oldAdmin, admin);
+        emit NewPendingAdmin(oldPendingAdmin, pendingAdmin);
     }
 
 }
