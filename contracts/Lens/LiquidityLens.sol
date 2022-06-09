@@ -157,7 +157,7 @@ contract Lens is ExponentialNoError {
     function getPrice(PriceOracle oracle, address addr) public returns (uint) {
         (bool success, bytes memory returnData) =
         address(oracle).call(
-            abi.encodePacked(oracle.getUnderlyingPrice.selector, abi.encode(addr))
+            abi.encodeWithSelector(oracle.getUnderlyingPrice.selector, addr)
         );
         if (success && returnData.length > 0) {
             return abi.decode(returnData, (uint));
