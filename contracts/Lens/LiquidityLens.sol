@@ -107,7 +107,7 @@ contract Lens is ExponentialNoError {
         return asset.borrowBalanceCurrent(account);
     }
 
-    function cTokenBalances(Comptroller comp, address payable account, uint8 featureflags) external returns (CTokenBalances memory) {
+    function cTokenBalances(Comptroller comp, address payable account) external returns (CTokenBalances memory) {
         CToken[] memory assets = comp.getAllMarkets();
         PriceOracle oracle = comp.oracle();
 
