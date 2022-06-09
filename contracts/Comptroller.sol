@@ -818,7 +818,7 @@ contract Comptroller is
     }
 
     function isMember(address account) internal returns (bool) {
-        return members[account] == true;
+        return members[account];
     }
 
     /*** Admin Functions ***/
