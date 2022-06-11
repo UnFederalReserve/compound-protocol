@@ -2,6 +2,7 @@ pragma solidity ^0.5.16;
 
 import "./ErrorReporter.sol";
 import "./ComptrollerStorage.sol";
+import "./ComptrollerInterface.sol";
 
 /**
  * @title ComptrollerCore
@@ -42,6 +43,9 @@ contract Unitroller is UnitrollerAdminStorage, ComptrollerErrorReporter {
         if (msg.sender != admin) {
             return fail(Error.UNAUTHORIZED, FailureInfo.SET_PENDING_IMPLEMENTATION_OWNER_CHECK);
         }
+
+        // Ensure invoke comptroller.isComptroller() returns true
+        require(ComptrollerInterface(newPendingImplementation).isComptroller(), "unitroller method returned false");
 
         address oldPendingImplementation = pendingComptrollerImplementation;
 
