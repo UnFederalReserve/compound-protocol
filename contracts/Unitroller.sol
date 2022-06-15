@@ -2,6 +2,7 @@ pragma solidity ^0.5.16;
 
 import "./ErrorReporter.sol";
 import "./ComptrollerStorage.sol";
+import "./ComptrollerInterface.sol";
 
 /**
  * @title ComptrollerCore
@@ -42,6 +43,9 @@ contract Unitroller is UnitrollerAdminStorage, ComptrollerErrorReporter {
         if (msg.sender != admin) {
             return fail(Error.UNAUTHORIZED, FailureInfo.SET_PENDING_IMPLEMENTATION_OWNER_CHECK);
         }
+
+        // Ensure invoke comptroller.isComptroller() returns true
+        require(ComptrollerInterface(newPendingImplementation).isComptroller(), "unitroller method returned false");
 
         address oldPendingImplementation = pendingComptrollerImplementation;
 
@@ -128,12 +132,22 @@ contract Unitroller is UnitrollerAdminStorage, ComptrollerErrorReporter {
         return uint(Error.NO_ERROR);
     }
 
+    function isContract(address adr) private view returns(bool) {
+        uint32 size;
+        assembly {
+            size := extcodesize(adr)
+        }
+        return size > 0;
+    }
+
     /**
      * @dev Delegates execution to an implementation contract.
      * It returns to the external caller whatever the implementation returns
      * or forwards reverts.
      */
     function () payable external {
+      require(isContract(comptrollerImplementation), "Implementation hasn't code");
+
         // delegate all other functions to current implementation
         (bool success, ) = comptrollerImplementation.delegatecall(msg.data);
 

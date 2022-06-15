@@ -107,7 +107,7 @@ contract Lens is ExponentialNoError {
         return asset.borrowBalanceCurrent(account);
     }
 
-    function cTokenBalances(Comptroller comp, address payable account, uint8 featureflags) external returns (CTokenBalances memory) {
+    function cTokenBalances(Comptroller comp, address payable account) external returns (CTokenBalances memory) {
         CToken[] memory assets = comp.getAllMarkets();
         PriceOracle oracle = comp.oracle();
 
@@ -157,15 +157,15 @@ contract Lens is ExponentialNoError {
     function getPrice(PriceOracle oracle, address addr) public returns (uint) {
         (bool success, bytes memory returnData) =
         address(oracle).call(
-            abi.encodePacked(oracle.getUnderlyingPrice.selector, abi.encode(addr))
+            abi.encodeWithSelector(oracle.getUnderlyingPrice.selector, addr)
         );
-        if (success && returnData.length > 0) {
+        if (success && returnData.length != 0) {
             return abi.decode(returnData, (uint));
         }
 
         // get underlying asset
         (success, returnData) = addr.call(abi.encodeWithSignature("underlying()"));
-        if (success && returnData.length > 0) {
+        if (success && returnData.length != 0) {
             return getPrice(oracle, abi.decode(returnData, (address)));
         }
         return 0;

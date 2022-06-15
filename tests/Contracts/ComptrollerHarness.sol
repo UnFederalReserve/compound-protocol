@@ -170,6 +170,8 @@ contract ComptrollerHarness is Comptroller, ComptrollerWhitelistFree {
 }
 
 contract ComptrollerBorked {
+    bool public constant isComptroller = true;
+
     function _become(Unitroller unitroller, PriceOracle _oracle, uint _closeFactorMantissa, uint _maxAssets, bool _reinitializing) public {
         _oracle;
         _closeFactorMantissa;
@@ -455,6 +457,8 @@ contract BoolComptroller is ComptrollerInterface {
 }
 
 contract EchoTypesComptroller is UnitrollerAdminStorage {
+    bool public constant isComptroller = true;
+
     function stringy(string memory s) public pure returns(string memory) {
         return s;
     }

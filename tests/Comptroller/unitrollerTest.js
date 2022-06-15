@@ -69,7 +69,7 @@ describe('Unitroller', () => {
     describe("Check caller is pendingComptrollerImplementation  and pendingComptrollerImplementation ≠ address(0) ", () => {
       let result;
       beforeEach(async () => {
-        await setPending(unitroller, root);
+        await setPending(brains, root);
         result = await send(unitroller, '_acceptImplementation');
       });
 
