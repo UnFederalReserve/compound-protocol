@@ -205,7 +205,6 @@ module.exports = {
       },
       accounts: [
         {env: "ACCOUNT"},
-        {file: `~/.ethereum/mainnet-${process.env['KEY']}`},
         {file: "~/.ethereum/mainnet"}                        // Load from given file with contents as the private key (e.g. 0x...)
       ]
     },
